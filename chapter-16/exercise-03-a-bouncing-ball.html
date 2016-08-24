@@ -1,0 +1,38 @@
+<canvas width="600" height="400"></canvas>
+<script>
+  var cx = document.querySelector("canvas").getContext("2d");
+
+  var lastTime = null;
+  function frame(time) {
+    if (lastTime != null)
+      updateAnimation(Math.min(100, time - lastTime) / 1000);
+    lastTime = time;
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  var ball = {centerX: 0, centerY: 0,
+              vectorX: 500, vectorY: 500,
+              radius: 20};
+  function updateAnimation(step) {
+    // Your code here.
+    // Compute
+    var minX = ball.radius, maxX = 600 - ball.radius,
+        minY = ball.radius, maxY = 400 - ball.radius;
+    ball.centerX = Math.max(minX,
+                   Math.min(maxX, ball.centerX + ball.vectorX * step));
+    ball.centerY = Math.max(minY,
+                   Math.min(maxY, ball.centerY + ball.vectorY * step));
+    if (ball.centerX == minX || ball.centerX == maxX)
+      ball.vectorX *= -1;
+    if (ball.centerY == minY || ball.centerY == maxY)
+      ball.vectorY *= -1;
+    // Draw
+    cx.clearRect(0, 0, 600, 400);
+    cx.fillStyle = "lightGray";
+    cx.fillRect(0, 0, 600, 400);
+    cx.beginPath();
+    cx.fillStyle = "red";
+    cx.arc(ball.centerX, ball.centerY, ball.radius, 0, 7);
+    cx.fill();
+  }
+</script>

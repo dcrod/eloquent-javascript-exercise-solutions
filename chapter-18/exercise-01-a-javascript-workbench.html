@@ -1,0 +1,22 @@
+<textarea id="code">return "hi";</textarea>
+<button id="button">Run</button>
+<pre id="output"></pre>
+
+<script>
+  // Your code here.
+  var runButton = document.querySelector("#button"),
+      codeField = document.querySelector("#code"),
+      output = document.querySelector("#output");
+  function runCode() {
+    var codeWrapper = new Function("", codeField.value);
+    output.textContent = codeWrapper();
+  }
+  runButton.addEventListener("click", runCode);
+  // Run code when user press ctrl + enter
+  codeField.addEventListener("keydown", function(event) {
+    if (event.keyCode == 13 && event.ctrlKey) {
+      runCode();
+      event.preventDefault();
+    }
+  });
+</script>

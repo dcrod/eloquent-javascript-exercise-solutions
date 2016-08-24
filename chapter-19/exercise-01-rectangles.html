@@ -1,0 +1,32 @@
+<script>
+  tools.Rectangle = function(event, cx) {
+    // Your code here.
+    
+    var pos = relativePos(event, cx.canvas);
+    cx.beginPath();
+    cx.moveTo(pos.x, pos.y);
+    
+    // Create preview box
+    var start = {x: event.pageX, y: event.pageY};
+    var preview = elt("div");
+    preview.style.position = "absolute";
+    preview.style.backgroundColor = cx.fillStyle;
+    document.body.appendChild(preview);
+    
+    trackDrag(function(event) { // Update preview on mousemove
+      preview.style.top = Math.min(start.y, event.pageY) + "px";
+      preview.style.left = Math.min(start.x, event.pageX) + "px";
+      preview.style.width = Math.abs(event.pageX - start.x) + "px";
+      preview.style.height = Math.abs(event.pageY - start.y) + "px";
+    }, function(event) { // Draw on canvas, remove preview on end
+      var endPos = relativePos(event, cx.canvas);
+      cx.fillRect(pos.x, pos.y, endPos.x - pos.x, endPos.y - pos.y);
+      document.body.removeChild(preview);
+    });
+  };
+</script>
+
+<link rel="stylesheet" href="css/paint.css">
+<body>
+  <script>createPaint(document.body);</script>
+</body>

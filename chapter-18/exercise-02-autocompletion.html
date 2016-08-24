@@ -1,0 +1,34 @@
+<input type="text" id="field">
+<div id="suggestions" style="cursor: pointer"></div>
+
+<script>
+  // Builds up an array with global variable names, like
+  // 'alert', 'document', and 'scrollTo'
+  var terms = [];
+  for (var name in window)
+    terms.push(name);
+
+  // Your code here.
+  var textField = document.querySelector("#field");
+  var suggestWrapper = document.querySelector("#suggestions");
+  function showSuggestions(input) {
+    var input = textField.value;
+    var matches = terms.filter(function (term) {
+      return term.indexOf(input) != -1;
+    });
+    while (suggestWrapper.lastChild) {
+      suggestWrapper.removeChild(suggestWrapper.lastChild);
+    }
+    matches.forEach(function (match) {
+      var item = document.createElement("div");
+      item.textContent = match;
+      item.addEventListener("click", function() {
+        textField.value = match;
+        // Update suggestions (terms that contain the selection)
+        showSuggestions();
+      });
+      suggestWrapper.appendChild(item);
+    });
+  }
+  textField.addEventListener("input", showSuggestions);
+</script>

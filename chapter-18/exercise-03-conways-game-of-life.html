@@ -1,0 +1,71 @@
+<div id="grid"></div>
+<button id="next">Next generation</button>
+
+<script>
+  // Your code here.
+  var gridDiv = document.querySelector("#grid");
+  var next = document.querySelector("#next");
+  var grid = [];
+  
+  function createGrid(height, width) {
+    //var grid = [];
+    for (y = 0; y < height; y++) {
+      grid.push([]);
+      var row = document.createElement("div");
+      for (x = 0; x < width; x++) {
+        grid[y][x] = Math.floor(2 * Math.random());
+        var cell = document.createElement("input");
+        cell.type = "checkbox";
+        cell.checked = grid[y][x] ? true : false;
+        cell.setAttribute("data-x", x);
+        cell.setAttribute("data-y", y);
+        cell.addEventListener("change", function (event) {
+          var cellX = event.target.getAttribute("data-x");
+          var cellY = event.target.getAttribute("data-y");
+          grid[cellY][cellX] = grid[cellY][cellX] ? 0 : 1;
+        });             
+        row.appendChild(cell);
+      }
+      gridDiv.appendChild(row);
+    }
+    //return grid;
+  }
+  
+  function countLiveNeighbors(cell) {
+    var count = 0,
+        yMin = Math.max(cell.y - 1, 0),
+        yMax = Math.min(cell.y + 1, grid.length - 1),
+        xMin = Math.max(cell.x - 1, 0),
+        xMax = Math.min(cell.x + 1, grid[0].length - 1);
+    for (y = yMin; y <= yMax; y++) {
+      for (x = xMin; x <= xMax; x++) {
+        if (!(y == cell.y && x == cell.x)) {
+          count += grid[y][x];
+        }
+      }
+    }
+    return count;
+  }
+
+  function updateGrid() {
+    var cells = document.querySelectorAll("input");
+    var newGrid = [];
+    grid.forEach(function(_, y) {
+      newGrid.push([]);
+      grid[y].forEach(function(_, x) {
+        var count = countLiveNeighbors({x: x, y: y});
+        if (grid[y][x]) {
+          newGrid[y][x] = (count < 2 || count > 3) ? 0 : 1;
+        } else {
+          newGrid[y][x] = count == 3 ? 1 : 0;
+        }
+        cells[y * grid.length + x].checked = newGrid[y][x] ? true : false;
+      });
+    });
+    grid = newGrid;
+  }
+  
+  createGrid(10, 10);
+  next.addEventListener("click", updateGrid);
+
+</script>

@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="css/game.css">
+
+<body>
+<script>
+  // The old runLevel function. Modify this...
+  function runLevel(level, Display, andThen) {
+    var display = new Display(document.body, level);
+    var paused = false;
+    addEventListener("keydown", function(event) {
+
+      if (event.keyCode === 27) {
+        paused = !paused;
+        if (!paused) {
+          runAnimation(frameFunction);
+        }
+      } else {
+        event.preventDefault();
+      }
+    });
+    function frameFunction(step) {
+      if (paused) {
+        return false;
+      }
+      level.animate(step, arrows);
+      display.drawFrame(step);
+      if (level.isFinished()) {
+        display.clear();
+        if (andThen)
+          andThen(level.status);
+        return false;
+      }
+    }
+    runAnimation(frameFunction);
+  }
+  runGame(GAME_LEVELS, DOMDisplay);
+</script>
+</body>
